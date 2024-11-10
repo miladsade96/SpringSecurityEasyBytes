@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -27,14 +29,19 @@ public class ProjectSecurityConfiguration {
     public UserDetailsService userDetailsService() {
         UserDetails user = User
                 .withUsername("user")
-                .password("{noop}12345")
+                .password("{bcrypt}$2a$12$Lg6uXGDgqPwgLHm9v9RsD.BFqMFwH.S1GuO.otsiwrNmGxQsZFmBa")
                 .authorities("read")
                 .build();
         UserDetails admin = User
                 .withUsername("admin")
-                .password("{noop}54321")
+                .password("{bcrypt}$2a$12$FpfnNgzrCAMO.GBdQom/7.dc6GUDxVJD4n2p4z6CeDh/psmZ3kpPC")
                 .authorities("admin")
                 .build();
         return new InMemoryUserDetailsManager(user, admin);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();  // BCrypt is the default
     }
 }
