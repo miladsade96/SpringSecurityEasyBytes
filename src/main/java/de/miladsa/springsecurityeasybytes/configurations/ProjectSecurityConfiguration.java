@@ -2,6 +2,7 @@ package de.miladsa.springsecurityeasybytes.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 
 @Configuration
 public class ProjectSecurityConfiguration {
@@ -29,12 +31,12 @@ public class ProjectSecurityConfiguration {
     public UserDetailsService userDetailsService() {
         UserDetails user = User
                 .withUsername("user")
-                .password("{bcrypt}$2a$12$Lg6uXGDgqPwgLHm9v9RsD.BFqMFwH.S1GuO.otsiwrNmGxQsZFmBa")
+                .password("{bcrypt}$2a$12$zm2iRhGGhqnQOW7Hl6aT2u7pqFd2Abof29pKmqcSrEeTJK9lNBz6m")
                 .authorities("read")
                 .build();
         UserDetails admin = User
                 .withUsername("admin")
-                .password("{bcrypt}$2a$12$FpfnNgzrCAMO.GBdQom/7.dc6GUDxVJD4n2p4z6CeDh/psmZ3kpPC")
+                .password("{bcrypt}$2a$12$Dl5KEo00Eo1UoYUs797IhuiDgz731FFJ15fFmxc/EwhTCmdM142/O")
                 .authorities("admin")
                 .build();
         return new InMemoryUserDetailsManager(user, admin);
@@ -43,5 +45,10 @@ public class ProjectSecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();  // BCrypt is the default
+    }
+
+    @Bean
+    public CompromisedPasswordChecker compromisedPasswordChecker() {
+        return new HaveIBeenPwnedRestApiPasswordChecker();
     }
 }
