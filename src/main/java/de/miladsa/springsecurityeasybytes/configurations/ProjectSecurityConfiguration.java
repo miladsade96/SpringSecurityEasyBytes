@@ -1,5 +1,6 @@
 package de.miladsa.springsecurityeasybytes.configurations;
 
+import de.miladsa.springsecurityeasybytes.exceptionHandlings.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -16,10 +17,12 @@ public class ProjectSecurityConfiguration {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         /*
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         To accept only https requests:
             .requiresChannel(
                         channelRequestMatcherRegistry -> channelRequestMatcherRegistry
                                 .anyRequest().requiresSecure())
+         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
          */
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -28,7 +31,9 @@ public class ProjectSecurityConfiguration {
                         .requestMatchers("/contact", "/notices", "/error", "/register").permitAll()
                 );
         http.formLogin(Customizer.withDefaults());
-        http.httpBasic(Customizer.withDefaults());
+        http.httpBasic(
+                httpSecurityHttpBasicConfigurer -> httpSecurityHttpBasicConfigurer
+                        .authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
         return http.build();
     }
 
