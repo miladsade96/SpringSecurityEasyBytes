@@ -15,6 +15,12 @@ import org.springframework.security.web.authentication.password.HaveIBeenPwnedRe
 public class ProjectSecurityConfiguration {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        /*
+        To accept only https requests:
+            .requiresChannel(
+                        channelRequestMatcherRegistry -> channelRequestMatcherRegistry
+                                .anyRequest().requiresSecure())
+         */
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.
