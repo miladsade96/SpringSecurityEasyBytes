@@ -22,6 +22,12 @@ public class ProjectSecurityConfiguration {
             .requiresChannel(
                         channelRequestMatcherRegistry -> channelRequestMatcherRegistry
                                 .anyRequest().requiresSecure())
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        http.exceptionHandling( // Global Config
+                httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
+                        .authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
          */
         http
